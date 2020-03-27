@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/w3.css">
+
+    <title>COVID-19 PPE Tracker</title>
+</head>
+
+<body>
+
+    <header class="w3-container w3-teal">
+        <h1>Submit request</h1>
+    </header>
+    <div class="w3-container w3-half w3-margin-top">
+        <form class="w3-container w3-card-4" method="POST" action="/ppe">
+            <p>
+                <input class="w3-input" type="text" name="name" style="width:90%" required>
+                <label>Name</label></p>
+
+            <select class="w3-select" name="type">
+                <option value="" disabled selected>Select type of item</option>
+                <option value="mask">Mask</option>
+                <option value="glove">Glove</option>
+            </select>
+            <p>
+                <input class="w3-input" type="number" name="quantity" style="width:90%" required>
+                <label>Quantity</label></p>
+            <p>
+                <input class="w3-input" type="text" name="email" style="width:90%" required>
+                <label>Email</label></p>
+            <p>
+                <input class="w3-input" type="text" name="contact" style="width:90%" required>
+                <label>Contact</label></p>
+            <p>
+                <input class="w3-input" type="text" name="latitude" style="width:90%" required>
+                <label>Latitude</label></p>
+            <p>
+                <input class="w3-input" type="text" name="longitude" style="width:90%" required>
+                <label>Longitude</label></p>
+            
+            <p>
+                <button class="w3-button w3-section w3-teal w3-ripple"> Log in </button></p>
+        </form>
+    </div>
+</body>
+
+</html>
