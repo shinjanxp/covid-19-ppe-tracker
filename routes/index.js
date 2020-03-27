@@ -8,12 +8,12 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 router.get('/ppe/create', function (req, res, next) {
-  res.sendfile('./public/ppe-create.html');
+  res.render('create-ppe');
 });
 
 router.post('/ppe', function (req, res, next) {
   console.log(req.body);
-  res.sendfile('./public/ppe-create.html');
+  res.render('create-ppe');
 })
 
 module.exports = router;
