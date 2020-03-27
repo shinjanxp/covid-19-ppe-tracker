@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Demand = sequelize.define('Demand', {
+  const Requirement = sequelize.define('Requirement', {
     name: DataTypes.STRING,
     itemType: DataTypes.STRING,
     quantity: DataTypes.DOUBLE,
@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     latitude: DataTypes.DOUBLE,
     longitude: DataTypes.DOUBLE
   }, {});
-  Demand.associate = function(models) {
+  Requirement.associate = function(models) {
     // associations can be defined here
   };
-  return Demand;
+  return Requirement;
 };

@@ -11,42 +11,99 @@
 
 <body>
 
-    <header class="w3-container w3-teal">
-        <h1>Submit request</h1>
-    </header>
-    <div class="w3-container w3-half w3-margin-top">
-        <form class="w3-container w3-card-4" method="POST" action="/ppe">
-            <p>
-                <input class="w3-input" type="text" name="name" style="width:90%" required>
-                <label>Name</label></p>
+    <%- include('partials/header') %>
 
-            <select class="w3-select" name="type">
-                <option value="" disabled selected>Select type of item</option>
-                <option value="mask">Mask</option>
-                <option value="glove">Glove</option>
-            </select>
-            <p>
-                <input class="w3-input" type="number" name="quantity" style="width:90%" required>
-                <label>Quantity</label></p>
-            <p>
-                <input class="w3-input" type="text" name="email" style="width:90%" required>
-                <label>Email</label></p>
-            <p>
-                <input class="w3-input" type="text" name="contact" style="width:90%" required>
-                <label>Contact</label></p>
-            <p>
-                <input class="w3-input" type="text" name="latitude" style="width:90%" required>
-                <label>Latitude</label></p>
-            <p>
-                <input class="w3-input" type="text" name="longitude" style="width:90%" required>
-                <label>Longitude</label></p>
 
-            <p>
-                <button class="w3-button w3-section w3-teal w3-ripple"> Log in </button></p>
-        </form>
+
+
+
+
+
+    <div class="w3-container">
+        <h4>Submit an availability or requirement</h4>
+
+        <div class="w3-cell-row">
+            <a href="javascript:void(0)" onclick="openTab(event, 'Availability');">
+                <div class="w3-cell w3-half tablink w3-bottombar w3-hover-light-grey w3-padding">Availability</div>
+            </a>
+            <a href="javascript:void(0)" onclick="openTab(event, 'Requirement');">
+                <div class="w3-cell w3-half tablink w3-bottombar w3-hover-light-grey w3-padding">Requirement</div>
+            </a>
+        </div>
+
+        <div id="Availability" class="w3-container tab" style="display: none;">
+            <!-- <h2>Availability</h2> -->
+            <div class="w3-container w3-margin-top" style="width:50%; margin-left: auto;margin-right: auto;">
+                <form class="w3-container w3-card-4" method="POST" action="/ppe">
+                    <h4>Availability</h4>
+                    <input type="hidden" name="mode" value="availability">
+                    <select class="w3-select" name="itemType">
+                        <option value="" disabled selected>Select type of item</option>
+                        <option value="mask">Mask</option>
+                        <option value="glove">Glove</option>
+                    </select>
+                    <label>Your name</label>
+                    <input class="w3-input" type="text" name="name" style="width:90%" required>
+                    <label>Quantity</label>
+                    <input class="w3-input" type="number" name="quantity" style="width:90%" required>
+                    <label>Email</label>
+                    <input class="w3-input" type="text" name="email" style="width:90%" required>
+                    <label>Contact</label>
+                    <input class="w3-input" type="text" name="contact" style="width:90%" required>
+                    <label>Latitude</label>
+                    <input class="w3-input" type="text" name="latitude" style="width:90%" required>
+                    <label>Longitude</label>
+                    <input class="w3-input" type="text" name="longitude" style="width:90%" required>
+
+                    <button class="w3-button w3-section w3-teal w3-ripple"> Submit </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="Requirement" class="w3-container tab" style="display:none">
+            <div class="w3-container w3-margin-top" style="width:50%; margin-left: auto;margin-right: auto;">
+                <form class="w3-container w3-card-4" method="POST" action="/ppe">
+                    <h4>Requirement</h4>
+                    <input type="hidden" name="mode" value="requirement">
+                    <select class="w3-select" name="itemType">
+                        <option value="" disabled selected>Select type of item</option>
+                        <option value="mask">Mask</option>
+                        <option value="glove">Glove</option>
+                    </select>
+                    <label>Your name</label>
+                    <input class="w3-input" type="text" name="name" style="width:90%" required>
+                    <label>Quantity</label>
+                    <input class="w3-input" type="number" name="quantity" style="width:90%" required>
+                    <label>Email</label>
+                    <input class="w3-input" type="text" name="email" style="width:90%" required>
+                    <label>Contact</label>
+                    <input class="w3-input" type="text" name="contact" style="width:90%" required>
+                    <label>Latitude</label>
+                    <input class="w3-input" type="text" name="latitude" style="width:90%" required>
+                    <label>Longitude</label>
+                    <input class="w3-input" type="text" name="longitude" style="width:90%" required>
+
+                    <button class="w3-button w3-section w3-teal w3-ripple"> Submit </button>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, x, tablinks;
+            x = document.getElementsByClassName("tab");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < x.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" w3-border-red", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.firstElementChild.className += " w3-border-red";
+        }
+    </script>
 </body>
-<script>
-    console.log("hello")
-</script>
+
 </html>
