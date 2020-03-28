@@ -62,3 +62,7 @@ typings/
 
 # Database
 *.sqlite
+
+# Key files
+*.pem
+*.key

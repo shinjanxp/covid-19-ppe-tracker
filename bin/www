@@ -6,9 +6,14 @@
 
 var app = require('../app');
 var debug = require('debug')('covid19-ppe-tracker:server');
-var http = require('http');
+var https = require('https');
 var models = require("../models");
+var fs = require('fs');
 
+const options = {
+  key: fs.readFileSync("./server.key"),
+  cert: fs.readFileSync("./server.pem")
+};
 /**
  * Get port from environment and store in Express.
  */
@@ -20,7 +25,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(options, app);
 
 // sync() will create all table if they doesn't exist in database
 models.sequelize.sync().then(function () {

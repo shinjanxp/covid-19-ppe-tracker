@@ -8,6 +8,7 @@ An application to track the availability and demand of PPE (Personal Protective 
 
 # Getting started
 ```
+./cert.sh # to generate certificates
 npm install
 npm start
 ```
