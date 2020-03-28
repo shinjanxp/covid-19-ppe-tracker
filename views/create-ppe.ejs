@@ -1,19 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="/stylesheets/style.css">
-
-    <title>COVID-19 PPE Tracker</title>
-</head>
+<%- include('partials/head') %>
 
 <body class=" bg-gradient">
 
-    <%- include('partials/header') %>
+    <%- include('partials/navbar') %>
 
 
     <div class="container">
@@ -29,7 +21,7 @@
                         <a class="nav-link" data-toggle="tab" href="#requirement">Requirement</a>
                     </li>
                 </ul>
-    
+
                 <div class="tab-content">
                     <div id="availability" class="tab-pane fade active show">
                         <div class="mt-5">
@@ -66,7 +58,7 @@
                                     <label for="longitude">Longitude</label>
                                     <input class="form-control" id="longitude" type="text" name="longitude" required>
                                 </div>
-    
+
                                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
                             </form>
                         </div>
@@ -106,7 +98,7 @@
                                     <label for="longitude">Longitude</label>
                                     <input class="form-control" id="longitude" type="text" name="longitude" required>
                                 </div>
-    
+
                                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
                             </form>
                         </div>
@@ -114,7 +106,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
 

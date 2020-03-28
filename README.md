@@ -6,7 +6,8 @@ An application to track the availability and demand of PPE (Personal Protective 
 * sqlite
 * redis
 
-# Getting start
+# Getting started
 ```
 npm install
+npm start
 ```
