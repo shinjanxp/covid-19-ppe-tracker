@@ -13,6 +13,9 @@
             <div class="col-md-6 card pt-2 pb-2 ml-3 mr-3 mb-3 shadow rounded">
                 <h5 class="text-center">Submit an availability or requirement</h5>
                 <hr>
+                <label for="">Choose location by clicking on the map</label>
+                <div id="mapid" class="choose-location"></div>
+                <hr>
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#availability">Availability</a>
@@ -50,14 +53,17 @@
                                     <label for="contact">Contact</label>
                                     <input class="form-control" id="contact" type="text" name="contact" required>
                                 </div>
-                                <div class="form-group">
+                                <input class="form-control" id="latitude" type="hidden" name="latitude" required>
+                                <input class="form-control" id="longitude" type="hidden" name="longitude" required>
+
+                                <!-- <div class="form-group">
                                     <label for="latitude">Latitude</label>
                                     <input class="form-control" id="latitude" type="text" name="latitude" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="longitude">Longitude</label>
                                     <input class="form-control" id="longitude" type="text" name="longitude" required>
-                                </div>
+                                </div> -->
 
                                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
                             </form>
@@ -90,14 +96,16 @@
                                     <label for="contact">Contact</label>
                                     <input class="form-control" id="contact" type="text" name="contact" required>
                                 </div>
-                                <div class="form-group">
+                                <input class="form-control" id="latitude" type="hidden" name="latitude" required>
+                                <input class="form-control" id="longitude" type="hidden" name="longitude" required>
+                                <!-- <div class="form-group">
                                     <label for="latitude">Latitude</label>
                                     <input class="form-control" id="latitude" type="text" name="latitude" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="longitude">Longitude</label>
                                     <input class="form-control" id="longitude" type="text" name="longitude" required>
-                                </div>
+                                </div> -->
 
                                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
                             </form>
@@ -108,17 +116,52 @@
         </div>
 
     </div>
+    <script>
+        let myMap;
+        let marker;
+
+        function getLocation(callback) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(callback);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function onMapClick(e) {
+            console.log(e)
+            var position = e.latlng;
+            marker.setLatLng(new L.LatLng(position.lat, position.lng));
+            mymap.panTo(new L.LatLng(position.lat, position.lng))
+            updateFormLocation(position.lat, position.lng)
+        };
+
+        function updateFormLocation(lat, lng) {
+            $('input[name=latitude]').val(lat)
+            $('input[name=longitude]').val(lng)
+        }
+        function displayMap(position) {
+            mymap = L.map('mapid').setView([position.coords.latitude, position.coords.longitude], 15);
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2hpbmphbiIsImEiOiJjazhiMHM2bzQwN2oyM2tvM3d3cm81dmxsIn0.cVV5b0Ey8lIQ2DcsJ5ZDmA', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                    '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1
+            }).addTo(mymap);
+            marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(mymap);
+            mymap.on('click', onMapClick);
+            updateFormLocation(position.coords.latitude, position.coords.longitude)
+        }
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
+        $(function () {
+            getLocation(displayMap)
+        });
+
+    </script>
 </body>
 
 </html>

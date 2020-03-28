@@ -9,9 +9,8 @@
 
     <div class="container pt-2" style="height:90%">
         <div id="mapid" class="h-100"></div>
-
+        <a type="button" class="btn btn-danger btn-fab" href="/ppe/create"><span>+</span></a>
     </div>
-
 
 
     <script>
@@ -50,7 +49,7 @@
                     const marker = L.marker([i.latitude, i.longitude], { icon: blueIcon }).addTo(mymap);
                     marker.bindPopup(`
                     <b>Available</b><br>
-                    ${i.quantity} ${i.itemType}<br>
+                    ${i.quantity} ${i.itemType}s<br>
                     ${i.name}<br>
                     <a href="tel:${i.contact}">${i.contact}</a><br>
                     <a href="mailto:${i.email}">${i.email}</a>
@@ -64,7 +63,7 @@
                     const marker = L.marker([i.latitude, i.longitude], { icon: redIcon }).addTo(mymap);
                     marker.bindPopup(`
                     <b>Required</b><br>
-                    ${i.quantity} ${i.itemType}<br>
+                    ${i.quantity} ${i.itemType}s<br>
                     ${i.name}<br>
                     <a href="tel:${i.contact}">${i.contact}</a><br>
                     <a href="mailto:${i.email}">${i.email}</a>

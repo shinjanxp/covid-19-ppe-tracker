@@ -26,6 +26,7 @@ router.get('/requirement', function (req, res, next) {
 });
 
 router.post('/ppe', function (req, res, next) {
+  console.log(req.body);
   if (req.body.mode === 'availability') {
     models.Availability.create({
       name: req.body.name,
