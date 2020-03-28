@@ -6,73 +6,19 @@
 <body class=" bg-gradient">
 
     <%- include('partials/navbar') %>
-
-    <div class="container pt-2" style="height:90%">
-        <div id="mapid" class="h-100"></div>
-        <a type="button" class="btn btn-danger btn-fab" href="/ppe/create"><span>+</span></a>
+    <div class="container mt-5">
+        <div class="jumbotron">
+            <h1 class="display-4">Hello, world!</h1>
+            <p class="lead">This is a simple application to track the status regarding availability and requirement of
+                PPE (Personal Protective Equipment) needed to fight COVID-19.</p>
+            <hr class="my-4">
+            <p>It uses information given by the public to help distribute PPE where needed.</p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href="/ppe/map" role="button">View status</a>
+            </p>
+        </div>
     </div>
 
-
-    <script>
-
-        var mymap = L.map('mapid').setView([22, 84], 4.5);
-        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2hpbmphbiIsImEiOiJjazhiMHM2bzQwN2oyM2tvM3d3cm81dmxsIn0.cVV5b0Ey8lIQ2DcsJ5ZDmA', {
-            maxZoom: 18,
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            id: 'mapbox/streets-v11',
-            tileSize: 512,
-            zoomOffset: -1
-        }).addTo(mymap);
-
-        var blueIcon = L.icon({
-            iconUrl: '/images/blue-marker.svg',
-
-            iconSize: [38, 95], // size of the icon
-            iconAnchor: [19, 47], // point of the icon which will correspond to marker's location
-        });
-        var redIcon = L.icon({
-            iconUrl: '/images/red-marker.svg',
-
-            iconSize: [38, 95], // size of the icon
-            iconAnchor: [19, 47], // point of the icon which will correspond to marker's location
-        });
-        const availability_url = "/availability";
-        const requirement_url = "/requirement";
-
-        $(function () {
-            // $ methods go here...
-            $.get(availability_url, function (data) {
-                // console.log(data)
-                for (let i of data) {
-                    const marker = L.marker([i.latitude, i.longitude], { icon: blueIcon }).addTo(mymap);
-                    marker.bindPopup(`
-                    <b>Available</b><br>
-                    ${i.quantity} ${i.itemType}s<br>
-                    ${i.name}<br>
-                    <a href="tel:${i.contact}">${i.contact}</a><br>
-                    <a href="mailto:${i.email}">${i.email}</a>
-                    `);
-                }
-            });
-            // Plot requirements
-            $.get(requirement_url, function (data) {
-                // console.log(data)
-                for (let i of data) {
-                    const marker = L.marker([i.latitude, i.longitude], { icon: redIcon }).addTo(mymap);
-                    marker.bindPopup(`
-                    <b>Required</b><br>
-                    ${i.quantity} ${i.itemType}s<br>
-                    ${i.name}<br>
-                    <a href="tel:${i.contact}">${i.contact}</a><br>
-                    <a href="mailto:${i.email}">${i.email}</a>
-                    `);
-                }
-            });
-        });
-
-    </script>
 </body>
 
 </html>

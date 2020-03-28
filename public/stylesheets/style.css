@@ -32,9 +32,13 @@ a {
   right: 25px;
   z-index: 500;
   padding-top:-10px;
-  font-size: 40px;
 }
-.btn-fab span{
+.btn-fab span.text{
   position: relative;
   top:-10px;
+  font-size: 40px;
+}
+
+.btn-fab span.material-icons{
+  padding-top:5px;
 }
