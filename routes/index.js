@@ -10,6 +10,20 @@ router.get('/', function (req, res, next) {
 router.get('/ppe/create', function (req, res, next) {
   res.render('create-ppe');
 });
+router.get('/availability', function (req, res, next) {
+  models.Availability.findAll().then(function (items) {
+    res.send(items);
+  }).catch(function (err) {
+    console.log('Oops! something went wrong, : ', err);
+  });
+});
+router.get('/requirement', function (req, res, next) {
+  models.Requirement.findAll().then(function (items) {
+    res.send(items);
+  }).catch(function (err) {
+    console.log('Oops! something went wrong, : ', err);
+  });
+});
 
 router.post('/ppe', function (req, res, next) {
   if (req.body.mode === 'availability') {
