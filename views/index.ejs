@@ -12,27 +12,67 @@
 
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
+
 
     <script>
+
         var mymap = L.map('mapid').setView([22, 84], 4.5);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2hpbmphbiIsImEiOiJjazhiMHM2bzQwN2oyM2tvM3d3cm81dmxsIn0.cVV5b0Ey8lIQ2DcsJ5ZDmA', {
-		maxZoom: 18,
-		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		id: 'mapbox/streets-v11',
-		tileSize: 512,
-		zoomOffset: -1
-	}).addTo(mymap);
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1
+        }).addTo(mymap);
+
+        var blueIcon = L.icon({
+            iconUrl: '/images/blue-marker.svg',
+
+            iconSize: [38, 95], // size of the icon
+            iconAnchor: [19, 47], // point of the icon which will correspond to marker's location
+        });
+        var redIcon = L.icon({
+            iconUrl: '/images/red-marker.svg',
+
+            iconSize: [38, 95], // size of the icon
+            iconAnchor: [19, 47], // point of the icon which will correspond to marker's location
+        });
+        const availability_url = "/availability";
+        const requirement_url = "/requirement";
+
+        $(function () {
+            // $ methods go here...
+            $.get(availability_url, function (data) {
+                // console.log(data)
+                for (let i of data) {
+                    const marker = L.marker([i.latitude, i.longitude], { icon: blueIcon }).addTo(mymap);
+                    marker.bindPopup(`
+                    <b>Available</b><br>
+                    ${i.quantity} ${i.itemType}<br>
+                    ${i.name}<br>
+                    <a href="tel:${i.contact}">${i.contact}</a><br>
+                    <a href="mailto:${i.email}">${i.email}</a>
+                    `);
+                }
+            });
+            // Plot requirements
+            $.get(requirement_url, function (data) {
+                // console.log(data)
+                for (let i of data) {
+                    const marker = L.marker([i.latitude, i.longitude], { icon: redIcon }).addTo(mymap);
+                    marker.bindPopup(`
+                    <b>Required</b><br>
+                    ${i.quantity} ${i.itemType}<br>
+                    ${i.name}<br>
+                    <a href="tel:${i.contact}">${i.contact}</a><br>
+                    <a href="mailto:${i.email}">${i.email}</a>
+                    `);
+                }
+            });
+        });
+
     </script>
 </body>
 
