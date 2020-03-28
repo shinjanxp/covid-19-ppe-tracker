@@ -12,7 +12,7 @@
    width="24"
    version="1.1"
    id="svg6"
-   sodipodi:docname="location_on-24px.svg"
+   sodipodi:docname="blue-marker.svg"
    inkscape:version="0.92.3 (2405546, 2018-03-11)">
   <metadata
      id="metadata12">
@@ -36,12 +36,12 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1533"
-     inkscape:window-height="845"
+     inkscape:window-width="1299"
+     inkscape:window-height="713"
      id="namedview8"
      showgrid="false"
      inkscape:zoom="9.8333333"
-     inkscape:cx="11.898305"
+     inkscape:cx="-5.8474578"
      inkscape:cy="12"
      inkscape:window-x="67"
      inkscape:window-y="27"
@@ -50,7 +50,7 @@
   <path
      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
      id="path2"
-     style="fill:#2196f3;fill-opacity:1" />
+     style="fill:#009688;fill-opacity:1" />
   <path
      d="M0 0h24v24H0z"
      fill="none"

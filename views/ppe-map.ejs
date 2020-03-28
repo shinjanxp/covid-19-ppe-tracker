@@ -9,7 +9,15 @@
 
     <div class="container pt-2" style="height:90%">
         <div id="mapid" class="h-100"></div>
-        <a type="button" class="btn btn-danger btn-fab" href="/ppe/create"><span class="text">+</span></a>
+        <div class="fab-container">
+            <a type="button" class="btn btn-danger btn-fab" href="/ppe/create"><span class="text">+</span></a>
+            <a type="button" class="btn btn-fab btn-secondary btn-sm" href="/ppe/list" style>
+                <span class="material-icons">
+                    list
+                </span>
+            </a>
+        </div>
+
     </div>
 
 
@@ -26,8 +34,8 @@
             zoomOffset: -1
         }).addTo(mymap);
 
-        var blueIcon = L.icon({
-            iconUrl: '/images/blue-marker.svg',
+        var greenIcon = L.icon({
+            iconUrl: '/images/green-marker.svg',
 
             iconSize: [38, 95], // size of the icon
             iconAnchor: [19, 47], // point of the icon which will correspond to marker's location
@@ -46,7 +54,7 @@
             $.get(availability_url, function (data) {
                 // console.log(data)
                 for (let i of data) {
-                    const marker = L.marker([i.latitude, i.longitude], { icon: blueIcon }).addTo(mymap);
+                    const marker = L.marker([i.latitude, i.longitude], { icon: greenIcon }).addTo(mymap);
                     marker.bindPopup(`
                     <b>Available</b><br>
                     ${i.quantity} ${i.itemType}s<br>

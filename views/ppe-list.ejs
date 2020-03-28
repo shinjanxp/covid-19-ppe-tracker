@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('partials/head') %>
+
+<body class=" bg-gradient">
+
+    <%- include('partials/navbar') %>
+    <div class="fab-container">
+        <a type="button" class="btn btn-danger btn-fab" href="/ppe/create"><span class="text">+</span></a>
+        <a type="button" class="btn btn-fab btn-secondary btn-sm" href="/ppe/map" style>
+            <span class="material-icons">
+                location_on
+            </span>
+        </a>
+    </div>
+    <div class="container pt-2">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h5 class="mb-0 text-white">Availabilities</h5>
+                    </div>
+                </div>
+                <div id="accordion">
+                    <% availabilities.forEach(function(av) { %>
+
+                    <div class="card">
+                        <div class="card-header" id="heading-<%= av.id %>">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-<%= av.id %>"
+                                    aria-expanded="true" aria-controls="collapse-<%= av.id %>">
+                                    <b><%= av.quantity %> <%= av.itemType %>s </b> available with <%= av.name %>
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapse-<%= av.id %>" class="collapse" aria-labelledby="heading-<%= av.id %>"
+                            data-parent="#accordion">
+                            <div class="card-body">
+                                <p>Email: <a href="mailto:<%= av.email %>"><%= av.email %></a> </p>
+                                <p>Phone: <a href="tel:<%= av.contact %>"><%= av.contact %></a> </p>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#locationModal" data-lat="<%= av.latitude %>"
+                                    data-lng="<%= av.longitude %>">Location</button>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-danger">
+                        <h5 class="mb-0 text-white">Requirements</h5>
+                    </div>
+                </div>
+                <div id="accordion">
+                    <% requirements.forEach(function(req) { %>
+
+                    <div class="card">
+                        <div class="card-header" id="heading-<%= req.id %>">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse"
+                                    data-target="#collapse-<%= req.id %>" aria-expanded="true"
+                                    aria-controls="collapse-<%= req.id %>">
+                                    <b><%= req.quantity %> <%= req.itemType %>s </b> required by <%= req.name %>
+
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapse-<%= req.id %>" class="collapse" aria-labelledby="heading-<%= req.id %>"
+                            data-parent="#accordion">
+                            <div class="card-body">
+                                <p>Email: <a href="mailto:<%= req.email %>"><%= req.email %></a> </p>
+                                <p>Phone: <a href="tel:<%= req.contact %>"><%= req.contact %></a> </p>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#locationModal" data-lat="<%= req.latitude %>"
+                                    data-lng="<%= req.longitude %>">Location</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="locationModalLabel">Location</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="mapid" style="height: 300px;"> </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let mymap = L.map('mapid').setView([22, 84], 10);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2hpbmphbiIsImEiOiJjazhiMHM2bzQwN2oyM2tvM3d3cm81dmxsIn0.cVV5b0Ey8lIQ2DcsJ5ZDmA', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1
+    }).addTo(mymap);
+    let marker = L.marker([22, 84]).addTo(mymap);
+
+    $('#locationModal').on('show.bs.modal', function (event) {
+        console.log("poof")
+        const button = $(event.relatedTarget) // Button that triggered the modal
+        const lat = button.data('lat') // Extract info from data-* attributes
+        const lng = button.data('lng') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use leaflet to update the map's point
+        marker.setLatLng(new L.LatLng(lat, lng));
+        mymap.panTo(new L.LatLng(lat, lng))
+        setTimeout(function(){ mymap.invalidateSize()}, 400);
+    })
+</script>
+
+</html>

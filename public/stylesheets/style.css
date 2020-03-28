@@ -23,15 +23,27 @@ a {
   height:300px;
 }
 
-.btn-fab{
-  border-radius: 50%;
-  width:50px;
-  height:50px;
+.fab-container{
   position: fixed;
   top: 25px;
   right: 25px;
   z-index: 500;
-  padding-top:-10px;
+}
+.btn-fab{
+  border-radius: 50%;
+  width:50px;
+  height:50px;
+  box-shadow: 5px 5px 5px rgba(0,0,0,0.3);
+}
+.btn-fab.btn-sm{
+  border-radius: 50%;
+  width:40px;
+  height:40px;
+}
+.btn-fab.btn-sm span.material-icons{
+  position: relative;
+  /* top:-5px; */
+  /* left:-5px; */
 }
 .btn-fab span.text{
   position: relative;

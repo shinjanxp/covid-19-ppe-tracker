@@ -13,8 +13,17 @@ router.get('/ppe/map', function (req, res, next) {
 });
 // View ppe as list
 router.get('/ppe/list', function (req, res, next) {
-  res.render('ppe-list', { title: 'Express' });
+  models.Availability.findAll().then(function (availabilities) {
+    models.Requirement.findAll().then(function (requirements) {
+      res.render('ppe-list', { availabilities: availabilities, requirements: requirements });
+    }).catch(function (err) {
+      console.log('Oops! something went wrong, : ', err);
+    });
+  }).catch(function (err) {
+    console.log('Oops! something went wrong, : ', err);
+  });
 });
+
 // View ppe-create form
 router.get('/ppe/create', function (req, res, next) {
   res.render('ppe-create');
