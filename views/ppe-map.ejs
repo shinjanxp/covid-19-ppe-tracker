@@ -8,6 +8,13 @@
     <%- include('partials/navbar') %>
 
     <div class="container pt-2" style="height:90%">
+        <div class="row w-100 justify-content-sm-center">
+            <div class="col-sm-10 text-center text-white">
+                <p>The availability and requirement status of all PPEs are shown in a map here. Click on the red + button to
+                    register a new status or the grey list button to view this information in a list. Clicking on a map marker
+                    will show more information like quantity of items and contact.</p>
+            </div>
+        </div>
         <div id="mapid" class="h-100"></div>
         <div class="fab-container">
             <a type="button" class="btn btn-danger btn-fab" href="/ppe/create"><span class="text">+</span></a>
