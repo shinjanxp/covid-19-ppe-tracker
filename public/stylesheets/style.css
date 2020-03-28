@@ -1,8 +1,17 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+.bg-gradient{
+  background-image: url('/images/blur-gradient.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.header.navbar{
+  background-color: rgba(255,255,255,0.3);
 }
