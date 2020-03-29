@@ -3,6 +3,12 @@ var router = express.Router();
 var models = require('../models');
 const webpush = require('web-push');
 
+const redis = require("redis");
+const client = redis.createClient();
+const searchRadius = 10; //km
+client.on("error", function (error) {
+  console.error(error);
+});
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -45,9 +51,30 @@ router.get('/requirement', function (req, res, next) {
     console.log('Oops! something went wrong, : ', err);
   });
 });
+
+function findMatches(newPost, newPostType) {
+  let searchType;
+  if (newPostType === 'Availability') {
+    searchType = 'Requirement';
+  }
+  else {
+    searchType = 'Availability';
+  }
+  client.geoadd(newPostType, newPost.longitude, newPost.latitude, newPost.id, function (err, res) {
+    // console.log(err,res);
+    if (!err) {
+      console.log("added to redis");
+      client.georadius(searchType, newPost.longitude, newPost.latitude, searchRadius, "km", 'WITHCOORD', function (err, res) {
+        console.log(err, res)
+        for(let match of res){
+          sendMessage(match[0], searchType);
+        }
+      })
+    }
+  });
+}
 // Create ppe
 router.post('/ppe', function (req, res, next) {
-  console.log(req.body);
   if (req.body.mode === 'availability') {
     models.Availability.create({
       name: req.body.name,
@@ -58,6 +85,7 @@ router.post('/ppe', function (req, res, next) {
       latitude: req.body.latitude,
       longitude: req.body.longitude,
     }).then(function (created) {
+      findMatches(created, 'Availability');
       res.render('ppe-thanks', { forId: created.id, forType: 'Availability' });
     });
   }
@@ -71,6 +99,7 @@ router.post('/ppe', function (req, res, next) {
       latitude: req.body.latitude,
       longitude: req.body.longitude,
     }).then(function (created) {
+      findMatches(created, 'Requirement');
       res.render('ppe-thanks', { forId: created.id, forType: 'Requirement' });
     });
   }
@@ -134,6 +163,23 @@ const triggerPushMsg = function (subscription, dataToSend) {
       }
     });
 };
+
+function sendMessage(recipientId, recipientType) {
+  models.Subscription.findOne({where:{ forId: recipientId, forType: recipientType }})
+    .then(function (subscription) {
+      if(!subscription){
+        return;
+      }
+      let promiseChain = Promise.resolve();
+
+      promiseChain = promiseChain.then(() => {
+        let payload = { title: "COVID-19 PPE TRacker", message: "We found a match" };
+
+        return triggerPushMsg(JSON.parse(subscription.pushSubscription), JSON.stringify(payload));
+      });
+      return promiseChain;
+    })
+}
 router.get('/ppe/trigger-push', function (req, res, next) {
   models.Subscription.findAll()
     .then(function (subscriptions) {
