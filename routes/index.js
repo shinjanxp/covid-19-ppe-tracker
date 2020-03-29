@@ -113,29 +113,11 @@ router.post('/ppe', function (req, res, next) {
 
 })
 
-router.get('/ppe/thanks', function (req, res, next) {
-  res.render('ppe-thanks');
-});
-const isValidSaveRequest = (req, res) => {
-  // Check the request body has at least an endpoint.
-  if (!req.body || !req.body.pushSubscription) {
-    // Not a valid subscription.
-    res.status(400);
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({
-      error: {
-        id: 'no-endpoint',
-        message: 'Subscription must have an endpoint.'
-      }
-    }));
-    return false;
-  }
-  return true;
-};
+// router.get('/ppe/thanks', function (req, res, next) {
+//   res.render('ppe-thanks');
+// });
+
 router.post('/ppe/save-subscription/', function (req, res) {
-  // if (!isValidSaveRequest(req, res)) {
-  //   return;
-  // }
   models.Subscription.create({
     forId: req.body.forId,
     forType: req.body.forType,
@@ -159,9 +141,7 @@ router.post('/ppe/save-subscription/', function (req, res) {
       }));
     });
 });
-function shouldSend(subscription) {
-  return true;
-}
+
 const triggerPushMsg = function (subscription, dataToSend) {
   return webpush.sendNotification(subscription, dataToSend)
     .catch((err) => {
@@ -184,7 +164,7 @@ function sendMessage(recipientId, recipientType, coords) {
       let promiseChain = Promise.resolve();
 
       promiseChain = promiseChain.then(() => {
-        let payload = { title: "COVID-19 PPE TRacker", message: "We found a match", coords: coords};
+        let payload = { title: "COVID-19 PPE Tracker", message: "We found a match", coords: coords};
 
         return triggerPushMsg(JSON.parse(subscription.pushSubscription), JSON.stringify(payload));
       });
@@ -192,6 +172,9 @@ function sendMessage(recipientId, recipientType, coords) {
     })
 }
 /*
+function shouldSend(subscription) {
+  return true;
+}
 router.get('/ppe/trigger-push', function (req, res, next) {
   models.Subscription.findAll()
     .then(function (subscriptions) {
