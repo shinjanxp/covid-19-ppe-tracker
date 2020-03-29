@@ -19,6 +19,7 @@
     </div>
 
 </body>
+<script src="/config.js"></script>
 <script>
     function urlBase64ToUint8Array(base64String) {
         const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -84,7 +85,7 @@
                 const subscribeOptions = {
                     userVisibleOnly: true,
                     applicationServerKey: urlBase64ToUint8Array(
-                        'BAImMqKdC6MKWQL3mcFMoFZtvFIMJmruGznRLZbg9bhH83--zA3FSwM2wnfMD63O_QWlPbh_zTuwlkrA294m1qs'
+                        config.serverPub
                     )
                 };
 
