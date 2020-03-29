@@ -70,10 +70,10 @@ function findMatches(newPost, newPostType, mode) {
           if (itemType === newPost.itemType) {
             // mode can be onSubscribe or onCreate
             if (mode === 'onSubscribe') {
-              sendMessage(newPost.id, newPostType);
+              sendMessage(newPost.id, newPostType, {lat:newPost.latitude, lng: newPost.longitude});
               return;
             }
-            sendMessage(matchId, searchType);
+            sendMessage(matchId, searchType, {lat:match[1][1], lng: match[1][0]});
           }
         }
       })
@@ -174,7 +174,7 @@ const triggerPushMsg = function (subscription, dataToSend) {
     });
 };
 
-function sendMessage(recipientId, recipientType) {
+function sendMessage(recipientId, recipientType, coords) {
   console.log("Sending message to ", recipientId, recipientType)
   models.Subscription.findOne({ where: { forId: recipientId, forType: recipientType } })
     .then(function (subscription) {
@@ -184,7 +184,7 @@ function sendMessage(recipientId, recipientType) {
       let promiseChain = Promise.resolve();
 
       promiseChain = promiseChain.then(() => {
-        let payload = { title: "COVID-19 PPE TRacker", message: "We found a match" };
+        let payload = { title: "COVID-19 PPE TRacker", message: "We found a match", coords: coords};
 
         return triggerPushMsg(JSON.parse(subscription.pushSubscription), JSON.stringify(payload));
       });
