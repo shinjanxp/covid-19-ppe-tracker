@@ -76,4 +76,48 @@ router.post('/ppe', function (req, res, next) {
 
 })
 
+router.get('/ppe/thanks', function (req, res, next) {
+  res.render('ppe-thanks');
+});
+const isValidSaveRequest = (req, res) => {
+  // Check the request body has at least an endpoint.
+  if (!req.body || !req.body.pushSubscription) {
+    // Not a valid subscription.
+    res.status(400);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({
+      error: {
+        id: 'no-endpoint',
+        message: 'Subscription must have an endpoint.'
+      }
+    }));
+    return false;
+  }
+  return true;
+};
+router.post('/ppe/save-subscription/', function (req, res) {
+  // if (!isValidSaveRequest(req, res)) {
+  //   return;
+  // }
+  models.Subscription.create({
+    forId: req.body.forId,
+    forType: req.body.forType,
+    pushSubscription: req.body.pushSubscription
+  })
+  .then(function(subscriptionId) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ data: { success: true } }));
+  })
+  .catch(function(err) {
+    res.status(500);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({
+      error: {
+        id: 'unable-to-save-subscription',
+        message: 'The subscription was received but we were unable to save it to our database.'
+      }
+    }));
+  });
+});
+
 module.exports = router;
