@@ -68,3 +68,6 @@ typings/
 *.key
 *.pub
 *.priv
+
+# config
+public/config.js
