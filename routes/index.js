@@ -60,14 +60,19 @@ function findMatches(newPost, newPostType) {
   else {
     searchType = 'Availability';
   }
-  client.geoadd(newPostType, newPost.longitude, newPost.latitude, newPost.id, function (err, res) {
+  client.geoadd(newPostType, newPost.longitude, newPost.latitude, newPost.id+'.'+newPost.itemType, function (err, res) {
     // console.log(err,res);
     if (!err) {
       console.log("added to redis");
       client.georadius(searchType, newPost.longitude, newPost.latitude, searchRadius, "km", 'WITHCOORD', function (err, res) {
         console.log(err, res)
         for(let match of res){
-          sendMessage(match[0], searchType);
+          let matchId = match[0].split('.')[0];
+          let itemType = match[0].split('.')[1];
+          console.log(matchId, itemType)
+          if(itemType === newPost.itemType){
+            sendMessage(matchId, searchType);
+          }
         }
       })
     }
@@ -165,6 +170,7 @@ const triggerPushMsg = function (subscription, dataToSend) {
 };
 
 function sendMessage(recipientId, recipientType) {
+  console.log("Sending message to ", recipientId, recipientType)
   models.Subscription.findOne({where:{ forId: recipientId, forType: recipientType }})
     .then(function (subscription) {
       if(!subscription){
