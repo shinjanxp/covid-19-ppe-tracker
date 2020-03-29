@@ -16,7 +16,7 @@ router.get('/', function (req, res, next) {
 });
 // View ppe on map
 router.get('/ppe/map', function (req, res, next) {
-  res.render('ppe-map');
+  res.render('ppe-map', {lat:req.query.lat || 22, lng: req.query.lng || 84, zoom: req.query.zoom || 4.5});
 });
 // View ppe as list
 router.get('/ppe/list', function (req, res, next) {
