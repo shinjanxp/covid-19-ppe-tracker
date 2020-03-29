@@ -15,12 +15,15 @@
             <p class="lead">
                 <button class="btn btn-primary btn-lg text-white" id="subscribe" role="button">Subscribe</button>
             </p>
+            <a href="/">Back to home page.</a>
         </div>
     </div>
 
 </body>
 <script src="/config.js"></script>
 <script>
+    const forId = '<%- forId %>';
+    const forType = '<%- forType %>';
     function urlBase64ToUint8Array(base64String) {
         const padding = '='.repeat((4 - base64String.length % 4) % 4);
         const base64 = (base64String + padding)
@@ -103,8 +106,8 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                forId: 1,
-                forType: 'Availability',
+                forId: forId,
+                forType: forType,
                 pushSubscription: JSON.stringify(subscription)
             })
         })
@@ -140,6 +143,8 @@
             })
             .then(function(res){
                 console.log(res);
+                alert("You have been subscribed to receive an alert when we find a match. You will now be redirected to the home page")
+                window.location.replace('/');
             })
         console.log("OK")
     })

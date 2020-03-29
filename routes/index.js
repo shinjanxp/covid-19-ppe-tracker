@@ -57,8 +57,8 @@ router.post('/ppe', function (req, res, next) {
       contact: req.body.contact,
       latitude: req.body.latitude,
       longitude: req.body.longitude,
-    }).then(function () {
-      res.redirect('/ppe/create');
+    }).then(function (created) {
+      res.render('ppe-thanks', { forId: created.id, forType: 'Availability' });
     });
   }
   else if (req.body.mode === 'requirement') {
@@ -70,8 +70,8 @@ router.post('/ppe', function (req, res, next) {
       contact: req.body.contact,
       latitude: req.body.latitude,
       longitude: req.body.longitude,
-    }).then(function () {
-      res.redirect('/ppe/create');
+    }).then(function (created) {
+      res.render('ppe-thanks', { forId: created.id, forType: 'Requirement' });
     });
   }
 
