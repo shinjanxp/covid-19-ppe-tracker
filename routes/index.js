@@ -143,7 +143,9 @@ router.get('/ppe/trigger-push', function (req, res, next) {
         const subscription = subscriptions[i];
         if (shouldSend(subscription)) {
           promiseChain = promiseChain.then(() => {
-            return triggerPushMsg(JSON.parse(subscription.pushSubscription), "foo");
+            let payload = { title: "COVID-19 PPE TRacker", message: "We found a match" };
+
+            return triggerPushMsg(JSON.parse(subscription.pushSubscription), JSON.stringify(payload));
           });
         }
       }
