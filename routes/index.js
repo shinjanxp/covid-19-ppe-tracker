@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var models = require('../models');
+const webpush = require('web-push');
 
 
 /* GET home page. */
@@ -104,20 +105,66 @@ router.post('/ppe/save-subscription/', function (req, res) {
     forType: req.body.forType,
     pushSubscription: req.body.pushSubscription
   })
-  .then(function(subscriptionId) {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ data: { success: true } }));
-  })
-  .catch(function(err) {
-    res.status(500);
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({
-      error: {
-        id: 'unable-to-save-subscription',
-        message: 'The subscription was received but we were unable to save it to our database.'
-      }
-    }));
-  });
+    .then(function (subscriptionId) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({ data: { success: true } }));
+    })
+    .catch(function (err) {
+      res.status(500);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({
+        error: {
+          id: 'unable-to-save-subscription',
+          message: 'The subscription was received but we were unable to save it to our database.'
+        }
+      }));
+    });
 });
+function shouldSend(subscription) {
+  return true;
+}
+const triggerPushMsg = function (subscription, dataToSend) {
+  return webpush.sendNotification(subscription, dataToSend)
+    .catch((err) => {
+      if (err.statusCode === 404 || err.statusCode === 410) {
+        console.log('Subscription has expired or is no longer valid: ', err);
+        return deleteSubscriptionFromDatabase(subscription._id);
+      } else {
+        throw err;
+      }
+    });
+};
+router.get('/ppe/trigger-push', function (req, res, next) {
+  models.Subscription.findAll()
+    .then(function (subscriptions) {
+      let promiseChain = Promise.resolve();
+
+      for (let i = 0; i < subscriptions.length; i++) {
+        const subscription = subscriptions[i];
+        if (shouldSend(subscription)) {
+          promiseChain = promiseChain.then(() => {
+            return triggerPushMsg(JSON.parse(subscription.pushSubscription), "foo");
+          });
+        }
+      }
+
+      return promiseChain;
+    })
+    .then(() => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({ data: { success: true } }));
+    })
+    .catch(function (err) {
+      res.status(500);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({
+        error: {
+          id: 'unable-to-send-messages',
+          message: `We were unable to send messages to all subscriptions : ` +
+            `'${err.message}'`
+        }
+      }));
+    });
+})
 
 module.exports = router;
