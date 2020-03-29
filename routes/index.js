@@ -52,7 +52,7 @@ router.get('/requirement', function (req, res, next) {
   });
 });
 
-function findMatches(newPost, newPostType) {
+function findMatches(newPost, newPostType, mode) {
   let searchType;
   if (newPostType === 'Availability') {
     searchType = 'Requirement';
@@ -60,17 +60,19 @@ function findMatches(newPost, newPostType) {
   else {
     searchType = 'Availability';
   }
-  client.geoadd(newPostType, newPost.longitude, newPost.latitude, newPost.id+'.'+newPost.itemType, function (err, res) {
+  client.geoadd(newPostType, newPost.longitude, newPost.latitude, newPost.id + '.' + newPost.itemType, function (err, res) {
     // console.log(err,res);
     if (!err) {
-      console.log("added to redis");
       client.georadius(searchType, newPost.longitude, newPost.latitude, searchRadius, "km", 'WITHCOORD', function (err, res) {
-        console.log(err, res)
-        for(let match of res){
+        for (let match of res) {
           let matchId = match[0].split('.')[0];
           let itemType = match[0].split('.')[1];
-          console.log(matchId, itemType)
-          if(itemType === newPost.itemType){
+          if (itemType === newPost.itemType) {
+            // mode can be onSubscribe or onCreate
+            if (mode === 'onSubscribe') {
+              sendMessage(newPost.id, newPostType);
+              return;
+            }
             sendMessage(matchId, searchType);
           }
         }
@@ -90,7 +92,7 @@ router.post('/ppe', function (req, res, next) {
       latitude: req.body.latitude,
       longitude: req.body.longitude,
     }).then(function (created) {
-      findMatches(created, 'Availability');
+      findMatches(created, 'Availability', 'onCreate');
       res.render('ppe-thanks', { forId: created.id, forType: 'Availability' });
     });
   }
@@ -104,7 +106,7 @@ router.post('/ppe', function (req, res, next) {
       latitude: req.body.latitude,
       longitude: req.body.longitude,
     }).then(function (created) {
-      findMatches(created, 'Requirement');
+      findMatches(created, 'Requirement', 'onCreate');
       res.render('ppe-thanks', { forId: created.id, forType: 'Requirement' });
     });
   }
@@ -142,6 +144,9 @@ router.post('/ppe/save-subscription/', function (req, res) {
     .then(function (subscriptionId) {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({ data: { success: true } }));
+      models[req.body.forType].findOne({ where: { id: req.body.forId } }).then(function (res) {
+        findMatches(res, req.body.forType, 'onSubscribe');
+      })
     })
     .catch(function (err) {
       res.status(500);
@@ -171,9 +176,9 @@ const triggerPushMsg = function (subscription, dataToSend) {
 
 function sendMessage(recipientId, recipientType) {
   console.log("Sending message to ", recipientId, recipientType)
-  models.Subscription.findOne({where:{ forId: recipientId, forType: recipientType }})
+  models.Subscription.findOne({ where: { forId: recipientId, forType: recipientType } })
     .then(function (subscription) {
-      if(!subscription){
+      if (!subscription) {
         return;
       }
       let promiseChain = Promise.resolve();
@@ -186,6 +191,7 @@ function sendMessage(recipientId, recipientType) {
       return promiseChain;
     })
 }
+/*
 router.get('/ppe/trigger-push', function (req, res, next) {
   models.Subscription.findAll()
     .then(function (subscriptions) {
@@ -220,5 +226,5 @@ router.get('/ppe/trigger-push', function (req, res, next) {
       }));
     });
 })
-
+*/
 module.exports = router;
