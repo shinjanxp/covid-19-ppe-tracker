@@ -72,3 +72,4 @@ typings/
 # config
 public/config.js
 keys.json
+app.yaml

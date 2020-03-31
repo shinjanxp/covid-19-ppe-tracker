@@ -77,15 +77,16 @@ function findMatches(newPost, newPostType, mode) {
     if (!err) {
       client.georadius(searchType, newPost.longitude, newPost.latitude, searchRadius, "km", 'WITHCOORD', function (err, res) {
         for (let match of res) {
-          let matchId = match[0].split('.')[0];
-          let itemType = match[0].split('.')[1];
+
+          let matchId = match[0].toString().split('.')[0];
+          let itemType = match[0].toString().split('.')[1];
           if (itemType === newPost.itemType) {
             // mode can be onSubscribe or onCreate
             if (mode === 'onSubscribe') {
               sendMessage(newPost.id, newPostType, { lat: newPost.latitude, lng: newPost.longitude });
               return;
             }
-            sendMessage(matchId, searchType, { lat: match[1][1], lng: match[1][0] });
+            sendMessage(matchId, searchType, { lat: match[1][1].toString(), lng: match[1][0].toString() });
           }
         }
       })
