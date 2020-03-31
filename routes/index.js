@@ -1,17 +1,14 @@
 var express = require('express');
 var router = express.Router();
-const nconf = require('nconf');
-nconf.argv().env().file('keys.json');
-
 var models = require('../models');
 const webpush = require('web-push');
 
 const redis = require("redis");
 const client = redis.createClient(
-  nconf.get('redisPort') || '6379',
-  nconf.get('redisHost') || '127.0.0.1',
+  process.env.REDIS_PORT || '6379',
+  process.env.REDIS_HOST || '127.0.0.1',
   {
-    'auth_pass': nconf.get('redisKey'),
+    'auth_pass': process.env.REDIS_KEY,
     'return_buffers': true
   });
 const searchRadius = 10; //km
@@ -49,7 +46,7 @@ router.get('/ppe/create', function (req, res, next) {
 });
 // Get list of availabilities
 router.get('/availability', function (req, res, next) {
-  models.Availability.findAll().then(function (items) {
+  models.Availability.findAll({ attributes: ['name', 'itemType', 'quantity', 'latitude', 'longitude'] }).then(function (items) {
     res.send(items);
   }).catch(function (err) {
     console.log('Oops! something went wrong, : ', err);
@@ -57,7 +54,7 @@ router.get('/availability', function (req, res, next) {
 });
 // Get list of requirements
 router.get('/requirement', function (req, res, next) {
-  models.Requirement.findAll().then(function (items) {
+  models.Requirement.findAll({ attributes: ['name', 'itemType', 'quantity', 'latitude', 'longitude'] }).then(function (items) {
     res.send(items);
   }).catch(function (err) {
     console.log('Oops! something went wrong, : ', err);

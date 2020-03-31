@@ -33,20 +33,18 @@
                     <% availabilities.forEach(function(av) { %>
 
                     <div class="card">
-                        <div class="card-header" id="heading-<%= av.id %>">
+                        <div class="card-header" id="heading-av-<%= av.id %>">
                             <h5 class="mb-0">
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-<%= av.id %>"
-                                    aria-expanded="true" aria-controls="collapse-<%= av.id %>">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-av-<%= av.id %>"
+                                    aria-expanded="true" aria-controls="collapse-av-<%= av.id %>">
                                     <b><%= av.quantity %> <%= av.itemType %>s </b> available with <%= av.name %>
                                 </button>
                             </h5>
                         </div>
 
-                        <div id="collapse-<%= av.id %>" class="collapse" aria-labelledby="heading-<%= av.id %>"
+                        <div id="collapse-av-<%= av.id %>" class="collapse" aria-labelledby="heading-av-<%= av.id %>"
                             data-parent="#accordion">
                             <div class="card-body">
-                                <p>Email: <a href="mailto:<%= av.email %>"><%= av.email %></a> </p>
-                                <p>Phone: <a href="tel:<%= av.contact %>"><%= av.contact %></a> </p>
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                     data-target="#locationModal" data-lat="<%= av.latitude %>"
                                     data-lng="<%= av.longitude %>">Location</button>
@@ -67,22 +65,20 @@
                     <% requirements.forEach(function(req) { %>
 
                     <div class="card">
-                        <div class="card-header" id="heading-<%= req.id %>">
+                        <div class="card-header" id="heading-req-<%= req.id %>">
                             <h5 class="mb-0">
                                 <button class="btn btn-link" data-toggle="collapse"
-                                    data-target="#collapse-<%= req.id %>" aria-expanded="true"
-                                    aria-controls="collapse-<%= req.id %>">
+                                    data-target="#collapse-req-<%= req.id %>" aria-expanded="true"
+                                    aria-controls="collapse-req-<%= req.id %>">
                                     <b><%= req.quantity %> <%= req.itemType %>s </b> required by <%= req.name %>
 
                                 </button>
                             </h5>
                         </div>
 
-                        <div id="collapse-<%= req.id %>" class="collapse" aria-labelledby="heading-<%= req.id %>"
+                        <div id="collapse-req-<%= req.id %>" class="collapse" aria-labelledby="heading-req-<%= req.id %>"
                             data-parent="#accordion">
                             <div class="card-body">
-                                <p>Email: <a href="mailto:<%= req.email %>"><%= req.email %></a> </p>
-                                <p>Phone: <a href="tel:<%= req.contact %>"><%= req.contact %></a> </p>
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                     data-target="#locationModal" data-lat="<%= req.latitude %>"
                                     data-lng="<%= req.longitude %>">Location</button>
