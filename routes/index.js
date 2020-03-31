@@ -1,13 +1,25 @@
 var express = require('express');
 var router = express.Router();
+const nconf = require('nconf');
+nconf.argv().env().file('keys.json');
+
 var models = require('../models');
 const webpush = require('web-push');
 
 const redis = require("redis");
-const client = redis.createClient();
+const client = redis.createClient(
+  nconf.get('redisPort') || '6379',
+  nconf.get('redisHost') || '127.0.0.1',
+  {
+    'auth_pass': nconf.get('redisKey'),
+    'return_buffers': true
+  });
 const searchRadius = 10; //km
 client.on("error", function (error) {
   console.error(error);
+});
+client.on("connect", function (res) {
+  console.log("connected to redis instance");
 });
 
 /* GET home page. */
@@ -16,7 +28,7 @@ router.get('/', function (req, res, next) {
 });
 // View ppe on map
 router.get('/ppe/map', function (req, res, next) {
-  res.render('ppe-map', {lat:req.query.lat || 22, lng: req.query.lng || 84, zoom: req.query.zoom || 4.5});
+  res.render('ppe-map', { lat: req.query.lat || 22, lng: req.query.lng || 84, zoom: req.query.zoom || 4.5 });
 });
 // View ppe as list
 router.get('/ppe/list', function (req, res, next) {
@@ -70,10 +82,10 @@ function findMatches(newPost, newPostType, mode) {
           if (itemType === newPost.itemType) {
             // mode can be onSubscribe or onCreate
             if (mode === 'onSubscribe') {
-              sendMessage(newPost.id, newPostType, {lat:newPost.latitude, lng: newPost.longitude});
+              sendMessage(newPost.id, newPostType, { lat: newPost.latitude, lng: newPost.longitude });
               return;
             }
-            sendMessage(matchId, searchType, {lat:match[1][1], lng: match[1][0]});
+            sendMessage(matchId, searchType, { lat: match[1][1], lng: match[1][0] });
           }
         }
       })
@@ -164,7 +176,7 @@ function sendMessage(recipientId, recipientType, coords) {
       let promiseChain = Promise.resolve();
 
       promiseChain = promiseChain.then(() => {
-        let payload = { title: "COVID-19 PPE Tracker", message: "We found a match", coords: coords};
+        let payload = { title: "COVID-19 PPE Tracker", message: "We found a match", coords: coords };
 
         return triggerPushMsg(JSON.parse(subscription.pushSubscription), JSON.stringify(payload));
       });

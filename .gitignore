@@ -71,3 +71,4 @@ typings/
 
 # config
 public/config.js
+keys.json
